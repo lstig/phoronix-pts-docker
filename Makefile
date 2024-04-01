@@ -25,7 +25,7 @@ build: $(BUILD_ROOT)/base.tar.xz
 	docker build \
 		--label org.opencontainers.image.base.digest="unkown" \
 		--label org.opencontainers.image.revision=$(BUILD_REF) \
-		--label org.opencontainers.image.created=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+		--label org.opencontainers.image.created=$$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
 		--label org.opencontainers.image.version=$(VERSION) \
 		--platform $(PLATFORMS) \
 		--tag ${IMAGE_REGISTRY}/${IMAGE_NAME}:$(BUILD_REF) .
@@ -36,6 +36,13 @@ release:
 		docker tag docker tag ${IMAGE_REGISTRY}/${IMAGE_NAME}:$(BUILD_REF) ${IMAGE_REGISTRY}/${IMAGE_NAME}:$${tag}
 		docker push ${IMAGE_REGISTRY}/${IMAGE_NAME}:$${tag}
 	done
+
+.PHONY: base
+base: $(BUILD_ROOT)/base.tar.xz
+
+.PHONY: version
+version:
+	@echo "$(VERSION)"
 
 .PHONY: clean
 clean:

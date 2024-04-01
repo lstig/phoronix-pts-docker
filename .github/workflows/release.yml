@@ -34,7 +34,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Build and push
+        name: Prepare
+        id: prepare
         run: |
-          make build
-          make release
+          make base
+          echo "PTS_VERSION=$(make version)" >> "$GITHUB_OUTPUT"
+          echo "BUILD_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: ${{ env.PLATFORMS }}
+          labels: |
+            org.opencontainers.image.base.digest="unkown"
+            org.opencontainers.image.revision=${{ env.GITHUB_SHA }}
+            org.opencontainers.image.created=${{ steps.prepare.outputs.BUILD_TIME }}
+            org.opencontainers.image.version=${{ steps.prepare.outputs.PTS_VERSION }}
+          tags: |
+            ghcr.io/lstig/pts:latest
+            ghcr.io/lstig/pts:${{ steps.prepare.outputs.PTS_VERSION }}
