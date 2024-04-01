@@ -48,8 +48,8 @@ jobs:
           push: true
           platforms: ${{ env.PLATFORMS }}
           labels: |
-            org.opencontainers.image.base.digest="unkown"
-            org.opencontainers.image.revision=${{ env.GITHUB_SHA }}
+            org.opencontainers.image.base.digest=unkown
+            org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.created=${{ steps.prepare.outputs.BUILD_TIME }}
             org.opencontainers.image.version=${{ steps.prepare.outputs.PTS_VERSION }}
           tags: |
