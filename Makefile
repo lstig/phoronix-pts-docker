@@ -8,7 +8,7 @@ VERSION        != cd phoronix-test-suite && ./phoronix-test-suite version 2>/dev
 PROJECT_DIR    != git rev-parse --show-toplevel
 BUILD_ROOT     := $(PROJECT_DIR)/build
 BASE_DIR       := $(BUILD_ROOT)/base
-PLATFORM       ?= $(shell docker system info --format '{{.OSType}}/{{.Architecture}}')
+PLATFORMS      ?= $(shell docker system info --format '{{.OSType}}/{{.Architecture}}')
 
 export PTS_USER_PATH_OVERRIDE              := $(BASE_DIR)/var/lib/phoronix-test-suite/
 export PTS_DOWNLOAD_CACHE_OVERRIDE         := $(BASE_DIR)/var/cache/phoronix-test-suite/download-cache/
@@ -27,7 +27,7 @@ build: $(BUILD_ROOT)/base.tar.xz
 		--label org.opencontainers.image.revision=$(BUILD_REF) \
 		--label org.opencontainers.image.created=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		--label org.opencontainers.image.version=$(VERSION) \
-		--platform $(PLATFORM) \
+		--platform $(PLATFORMS) \
 		--tag ${IMAGE_REGISTRY}/${IMAGE_NAME}:$(BUILD_REF) .
 
 .PHONY: release
