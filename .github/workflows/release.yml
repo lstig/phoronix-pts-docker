@@ -37,9 +37,8 @@ jobs:
         name: Prepare
         id: prepare
         run: |
-          make base
-          echo "PTS_VERSION=$(make version)" >> "$GITHUB_OUTPUT"
-          echo "BUILD_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+          make tarball
+          make outputs | tee "$GITHUB_OUTPUT"
       -
         name: Build and push
         uses: docker/build-push-action@v5
@@ -47,8 +46,12 @@ jobs:
           context: .
           push: true
           platforms: ${{ env.PLATFORMS }}
+          build-args:
+            BASE_IMAGE=${{ steps.prepare.outputs.BASE_IMAGE }}
+            BASE_IMAGE_DIGEST=${{ steps.prepare.outputs.BASE_IMAGE_DIGEST }}
           labels: |
-            org.opencontainers.image.base.digest=unkown
+            org.opencontainers.image.base.digest=${{ steps.prepare.outputs.BASE_IMAGE }}
+            org.opencontainers.image.base.name=${{ steps.prepare.outputs.BASE_IMAGE_DIGEST }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.created=${{ steps.prepare.outputs.BUILD_TIME }}
             org.opencontainers.image.version=${{ steps.prepare.outputs.PTS_VERSION }}
