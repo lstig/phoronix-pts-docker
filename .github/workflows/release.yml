@@ -46,7 +46,7 @@ jobs:
           context: .
           push: true
           platforms: ${{ env.PLATFORMS }}
-          build-args:
+          build-args: |
             BASE_IMAGE=${{ steps.prepare.outputs.BASE_IMAGE }}
             BASE_IMAGE_DIGEST=${{ steps.prepare.outputs.BASE_IMAGE_DIGEST }}
           labels: |
