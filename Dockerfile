@@ -15,7 +15,15 @@ ADD build/base.tar.xz /
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install --no-install-recommends -y unzip php-cli apt-utils mesa-utils php-xml php-sqlite3 git-core apt-file sudo && \
+    apt-get install -y \
+        # system packages
+        apt-utils apt-file sudo \
+        # build utils
+        build-essential git-core \
+        # libs and utils
+        unzip xz-utils mesa-utils \
+        # php
+        php-cli php-gd php-xml php-sqlite3 && \
     apt-file update
 
 ENTRYPOINT ["/phoronix-test-suite/phoronix-test-suite"]
