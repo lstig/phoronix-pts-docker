@@ -37,7 +37,6 @@ jobs:
         name: Prepare
         id: prepare
         run: |
-          make tarball
           make outputs | tee "$GITHUB_OUTPUT"
       -
         name: Build and push
