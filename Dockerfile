@@ -13,6 +13,7 @@ WORKDIR /usr/share/phoronix-test-suite
 
 COPY phoronix-test-suite/pts-core /usr/share/phoronix-test-suite/pts-core
 COPY phoronix-test-suite/phoronix-test-suite /usr/bin/phoronix-test-suite
+COPY hooks /usr/share/phoronix-test-suite/pts-core/hooks
 
 ARG PTS_DOWNLOAD_CACHING_PLATFORM_LIMIT=1
 ARG DEBIAN_FRONTEND=noninteractive
