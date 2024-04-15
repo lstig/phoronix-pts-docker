@@ -30,16 +30,18 @@ RUN rm -rf \
     apt-get upgrade -y && \
     apt-get install -y \
         # system packages
-        apt-utils apt-file sudo \
+        apt-utils apt-file sudo unzip vim \
         # build utils
-        build-essential git-core \
-        # libs and utils
-        unzip xz-utils mesa-utils vim \
+        build-essential git-core pkg-config xz-utils mesa-utils \
+        # libs
+        libssl-dev libpcre3-dev \
         # benchmark packages
         sqlite nginx \
         # php
         php-cli php-gd php-xml php-sqlite3 && \
-    apt-file update
+    apt-file update && \
+    # disable safe.directory check (not great, but fixes issues with some test builds)
+    git config --global --add safe.directory '*'
 
 RUN phoronix-test-suite make-openbenchmarking-cache lean && \
     rm -rf /var/lib/phoronix-test-suite/core.pt2so
