@@ -36,7 +36,7 @@ RUN rm -rf \
         # libs and utils
         unzip xz-utils mesa-utils vim \
         # benchmark packages
-        sqlite nginx
+        sqlite nginx \
         # php
         php-cli php-gd php-xml php-sqlite3 && \
     apt-file update
