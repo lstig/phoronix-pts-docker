@@ -34,7 +34,9 @@ RUN rm -rf \
         # build utils
         build-essential git-core \
         # libs and utils
-        unzip xz-utils mesa-utils \
+        unzip xz-utils mesa-utils vim \
+        # benchmark packages
+        sqlite nginx
         # php
         php-cli php-gd php-xml php-sqlite3 && \
     apt-file update
