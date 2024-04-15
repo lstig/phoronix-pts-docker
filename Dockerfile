@@ -11,26 +11,14 @@ LABEL org.opencontainers.image.url="https://www.phoronix-test-suite.com"
 
 WORKDIR /usr/share/phoronix-test-suite
 
-COPY phoronix-test-suite/pts-core /usr/share/phoronix-test-suite/pts-core
-COPY phoronix-test-suite/phoronix-test-suite /usr/bin/phoronix-test-suite
-COPY hooks /usr/share/phoronix-test-suite/pts-core/hooks
-
 ARG PTS_DOWNLOAD_CACHING_PLATFORM_LIMIT=1
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN rm -rf \
-        pts-core/static/phoronix-test-suite.desktop \
-        pts-core/static/phoronix-test-suite-launcher.desktop \
-        pts-core/openbenchmarking.org/openbenchmarking-mime.xml \
-        pts-core/static/bash_completion \
-        pts-core/static/images/openbenchmarking.png \
-        pts-core/static/images/%phoronix-test-suite.png && \
-    sed -i 's:export PTS_DIR=$(readlink -f `dirname $0`):export PTS_DIR=/usr/share/phoronix-test-suite:g' /usr/bin/phoronix-test-suite && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
         # system packages
-        apt-utils apt-file sudo unzip vim \
+        apt-utils apt-file sudo unzip vim rsync \
         # build utils
         build-essential git-core pkg-config xz-utils mesa-utils \
         # libs
@@ -43,7 +31,19 @@ RUN rm -rf \
     # disable safe.directory check (not great, but fixes issues with some test builds)
     git config --global --add safe.directory '*'
 
-RUN phoronix-test-suite make-openbenchmarking-cache lean && \
+COPY phoronix-test-suite/pts-core /usr/share/phoronix-test-suite/pts-core
+COPY phoronix-test-suite/phoronix-test-suite /usr/bin/phoronix-test-suite
+COPY hooks /usr/share/phoronix-test-suite/pts-core/hooks
+
+RUN rm -rf \
+    pts-core/static/phoronix-test-suite.desktop \
+    pts-core/static/phoronix-test-suite-launcher.desktop \
+    pts-core/openbenchmarking.org/openbenchmarking-mime.xml \
+    pts-core/static/bash_completion \
+    pts-core/static/images/openbenchmarking.png \
+    pts-core/static/images/%phoronix-test-suite.png && \
+    sed -i 's:export PTS_DIR=$(readlink -f `dirname $0`):export PTS_DIR=/usr/share/phoronix-test-suite:g' /usr/bin/phoronix-test-suite && \
+    phoronix-test-suite make-openbenchmarking-cache lean && \
     rm -rf /var/lib/phoronix-test-suite/core.pt2so
 
 WORKDIR /
